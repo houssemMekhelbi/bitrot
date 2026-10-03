@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+"""Lock-screen text (Bitrot). No username.
+
+    bitrot-lock-saying         every line of sayings.txt, as Pango markup: the current
+                               line first, larger and in the secondary colour, the others
+                               below it in the label's own (dim) colour
+    bitrot-lock-saying date    the date, upper case and letter-spaced
+
+Lines come from ~/.config/hypr/bitrot-tty/sayings.txt, one per line. The current
+line changes every 20 seconds; the index comes from the clock.
+"""
+
+import sys
+import time
+from html import escape
+from pathlib import Path
+
+SAYINGS = Path.home() / ".config/hypr/bitrot-tty/sayings.txt"
+
+
+def lines():
+    try:
+        raw = [l.strip() for l in SAYINGS.read_text(encoding="utf-8").splitlines()]
+    except OSError:
+        return []
+    return [l for l in raw if l and not l.startswith("#")]
+
+
+def main():
+    if len(sys.argv) > 1 and sys.argv[1] == "date":
+        day = time.strftime("%A · ") + str(int(time.strftime("%d"))) + time.strftime(" %B %Y")
+        print(f"<span letter_spacing='5400'>{escape(day.upper())}</span>")
+        return
+    all_ = lines()
+    if not all_:
+        return
+    k = int(time.time() // 20) % len(all_)
+    order = all_[k:] + all_[:k]
+    out = [f"<span size='27pt' foreground='#6FBF7C' letter_spacing='1000'>{escape(order[0])}</span>"]
+    out += [f"<span letter_spacing='600'>{escape(l)}</span>" for l in order[1:]]
+    print("\n".join(out))
+
+
+if __name__ == "__main__":
+    main()

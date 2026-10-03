@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# Bitrot launcher: a floating foot window running fzf over desktop entries,
+# opaque on the panel colour. Hyprland gives it the 1px frame (see hypr/bitrot-lp.lua).
+# Pressing the bind again while it is open closes it.
+set -euo pipefail
+
+if hyprctl clients -j | grep -q '"class": "bitrot-launcher"'; then
+    hyprctl eval 'bitrot_close_launcher()' >/dev/null
+    exit 0
+fi
+
+exec foot \
+    --app-id=bitrot-launcher \
+    --title=Launcher \
+    -o main.pad=18x14 \
+    -o main.font="IBM Plex Mono:size=10.5" \
+    -o main.line-height=21 \
+    -o colors-dark.alpha=1.0 \
+    -o colors-light.alpha=1.0 \
+    -o colors-dark.background=E4EFD9 \
+    -o colors-light.background=E4EFD9 \
+    "$HOME/.local/bin/bitrot-launcher-menu"

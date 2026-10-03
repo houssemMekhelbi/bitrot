@@ -1,0 +1,159 @@
+/* Bitrot tty notifications: square cards on the panel colour, opaque, a 1px
+ * hairline, no rounding. One rule tells urgency apart, the title: critical in
+ * the error colour with a ghost 4px to the right (GTK CSS cannot clip text to a
+ * band, so the ghost is a text-shadow over the whole title), normal in the
+ * primary colour, low dim. The control centre is a 1px structure frame on the
+ * panel with its title in Sora and a clear button outlined in structure.
+ * tty cards carry a faint phosphor bloom; lp cards are flat.
+ * Starts from the stock stylesheet. Reload after editing: swaync-client -rs */
+
+@import url("file:///etc/xdg/swaync/style.css");
+
+:root {
+  --cc-bg: rgba(10, 17, 12, 1.0);
+  --noti-border-color: rgb(30, 61, 38);
+  --noti-bg: 10, 17, 12;
+  --noti-bg-alpha: 1.0;
+  --noti-bg-darker: rgb(5, 8, 6);
+  --noti-bg-hover: rgb(22, 48, 28);
+  --noti-bg-focus: rgb(22, 48, 28);
+  --noti-close-bg: rgb(16, 26, 19);
+  --noti-close-bg-hover: rgb(22, 48, 28);
+  --text-color: rgb(156, 240, 166);
+  --text-color-disabled: rgb(98, 166, 110);
+  --bg-selected: rgb(22, 48, 28);
+  --border: 1px solid var(--noti-border-color);
+  --border-radius: 0;
+  --notification-shadow: 0 0 10px rgba(51, 204, 85, 0.30);
+  --font-size-body: 12px;
+  --font-size-summary: 13px;
+}
+
+* {
+  font-family: "IBM Plex Sans", "IBM Plex Sans Arabic", sans-serif;
+  border-radius: 0;
+}
+
+.notification-row .notification-background .notification {
+  background-color: rgb(10, 17, 12);
+  border: 1px solid rgb(30, 61, 38);
+  border-radius: 0;
+  padding: 2px 4px 4px 4px;
+  box-shadow: 0 0 10px rgba(51, 204, 85, 0.30);
+}
+
+.notification-row .notification-background .notification .notification-default-action,
+.notification-row .notification-background .notification .notification-action {
+  border-radius: 0;
+}
+
+.notification-row .notification-background .notification .notification-default-action .notification-content .text-box .summary {
+  font-weight: 600;
+  color: rgb(156, 240, 166);
+}
+
+.notification-row .notification-background .notification.low .notification-default-action .notification-content .text-box .summary {
+  color: rgb(98, 166, 110);
+}
+
+/* critical: the error colour and its ghost, the slice of this surface */
+.notification-row .notification-background .notification.critical .notification-default-action .notification-content .text-box .summary {
+  color: rgb(255, 106, 85);
+  text-shadow: 4px 0 0 rgba(255, 106, 85, 0.33);
+}
+
+.notification-row .notification-background .notification .notification-default-action .notification-content .text-box .time {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  font-weight: normal;
+  color: rgb(98, 166, 110);
+}
+
+.notification-row .notification-background .notification .notification-default-action .notification-content .text-box .body {
+  font-family: "IBM Plex Mono", "IBM Plex Sans Arabic", monospace;
+  color: rgb(207, 227, 204);
+}
+
+.close-button {
+  border-radius: 0;
+  background: rgb(16, 26, 19);
+  color: rgb(111, 191, 124);
+}
+
+.control-center {
+  background: rgb(10, 17, 12);
+  border: 1px solid rgb(51, 204, 85);
+  border-radius: 0;
+  box-shadow: 0 0 10px rgba(51, 204, 85, 0.30);
+}
+
+.control-center .notification-row .notification-background .notification {
+  background-color: rgb(5, 8, 6);
+  box-shadow: none;
+}
+
+.widget-title > label {
+  font-family: "Sora", sans-serif;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 2px;
+  color: rgb(156, 240, 166);
+}
+
+.widget-title > button {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  border-radius: 0;
+  background: transparent;
+  color: rgb(51, 204, 85);
+  border: 1px solid rgb(51, 204, 85);
+  box-shadow: none;
+}
+
+.widget-title > button:hover {
+  background: rgb(22, 48, 28);
+}
+
+.widget-buttons-grid flowboxchild > button {
+  border-radius: 0;
+  background: rgb(10, 17, 12);
+  color: rgb(156, 240, 166);
+  border: 1px solid rgb(30, 61, 38);
+}
+
+.widget-buttons-grid flowboxchild > button:hover {
+  background: rgb(22, 48, 28);
+}
+
+.widget-buttons-grid flowboxchild > button.toggle:checked {
+  background: rgb(255, 176, 0);
+  color: rgb(5, 8, 6);
+}
+
+.widget-dnd label {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  color: rgb(111, 191, 124);
+}
+
+/* the do-not-disturb switch as a text-mode block: square, hairline track, amber when on */
+.widget-dnd switch {
+  border-radius: 0;
+  background: rgb(5, 8, 6);
+  border: 1px solid rgb(30, 61, 38);
+}
+
+.widget-dnd switch slider {
+  border-radius: 0;
+  background: rgb(51, 204, 85);
+  box-shadow: none;
+}
+
+.widget-dnd switch:checked {
+  background: rgb(255, 176, 0);
+}
+
+.widget-dnd switch:checked slider {
+  background: rgb(5, 8, 6);
+}

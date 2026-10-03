@@ -1,0 +1,45 @@
+# Bitrot tty terminal: IBM Plex Mono, opaque, amber block cursor.
+
+font-family = IBM Plex Mono
+font-family = JetBrainsMono Nerd Font
+font-family = DejaVu Sans Mono
+font-size = 10.5
+adjust-cell-height = 20%
+window-padding-x = 6
+window-padding-y = 6
+window-decoration = none
+background-opacity = 1.0
+
+background = #050806
+foreground = #9CF0A6
+cursor-color = #FFB000
+cursor-text = #050806
+cursor-style = block
+cursor-style-blink = false
+selection-background = #16301C
+selection-foreground = #9CF0A6
+
+# Search and splits in the theme's colours (ghostty's stock yellow and orange otherwise).
+search-background = #1E3D26
+search-foreground = #9CF0A6
+search-selected-background = #FFB000
+search-selected-foreground = #050806
+split-divider-color = #1E3D26
+unfocused-split-fill = #050806
+
+palette = 0=#0A110C
+palette = 1=#D9442F
+palette = 2=#3FD15A
+palette = 3=#FFB000
+palette = 4=#5AA0B8
+palette = 5=#B57AB0
+palette = 6=#5FC9B0
+palette = 7=#BFE0BD
+palette = 8=#62A66E
+palette = 9=#FF6A55
+palette = 10=#7DFF8F
+palette = 11=#FFD36A
+palette = 12=#86C6DC
+palette = 13=#D3A0CC
+palette = 14=#8AE6D2
+palette = 15=#E6F7E3

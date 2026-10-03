@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+"""Waybar module custom/yawm ("yawm" = day): open Taskwarrior tasks due today
+or overdue. Tooltip lists them. Classes: overdue, due, clear.
+Refreshed every 300s and on SIGRTMIN+10 (sent by bitrot-yawm-menu)."""
+
+import json
+import shutil
+import subprocess
+from datetime import datetime, time, timedelta, timezone
+from html import escape
+
+
+def out(text, tooltip, cls):
+    print(json.dumps({"text": text, "tooltip": tooltip, "class": cls}))
+
+
+def main():
+    if not shutil.which("task"):
+        return out("", "", "clear")
+    try:
+        raw = subprocess.run(
+            ["task", "rc.verbose=nothing", "rc.hooks=off", "+PENDING", "export"],
+            capture_output=True, text=True, timeout=10,
+        ).stdout
+        tasks = json.loads(raw or "[]")
+    except (subprocess.SubprocessError, ValueError):
+        return out("yawm ?", "Taskwarrior did not answer", "clear")
+
+    now = datetime.now().astimezone()
+    tomorrow = datetime.combine(now.date() + timedelta(days=1), time(), now.tzinfo)
+    today, overdue, rest = [], [], 0
+    for t in tasks:
+        if "note" in t.get("tags", []):
+            continue
+        due = t.get("due")
+        if not due:
+            rest += 1
+            continue
+        due = datetime.strptime(due, "%Y%m%dT%H%M%SZ").replace(tzinfo=timezone.utc)
+        if due < now and due.astimezone().date() < now.date():
+            overdue.append(t)
+        elif due < tomorrow:
+            today.append(t)
+        else:
+            rest += 1
+
+    lines = []
+    for t in overdue:
+        lines.append(f"<span color='#A3180F'>█</span> {escape(t['description'])}")
+    for t in today:
+        lines.append(f"<span color='#8A5200'>▓</span> {escape(t['description'])}")
+    if not lines:
+        lines.append("Nothing due today")
+    if rest:
+        lines.append(f"<span color='#44614A'>+{rest} open later / undated</span>")
+    lines.append("<span color='#44614A'>click list · right-click add</span>")
+
+    n = len(today) + len(overdue)
+    cls = "overdue" if overdue else "due" if today else "clear"
+    out(f"<span color='#1A1F1A' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>YAWM</span> <span color='#2F5233'>□</span> {n}", "\n".join(lines), cls)
+
+
+if __name__ == "__main__":
+    main()

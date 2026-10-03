@@ -1,0 +1,252 @@
+/* Bitrot tty bar. One opaque strip on the panel colour, 26px, no margins, a 1px
+ * hairline under it. The bar's two ends carry the slice: PNG end caps in the
+ * outer side padding (padding = cap width, 14px; three 2px bands: green, amber
+ * displaced 4px, dim; the right one mirrored). Everything else is clean text in
+ * IBM Plex Mono 11px: labels in the primary colour (markup in config.jsonc),
+ * values in the data colour, a 1px hairline between the right-hand modules.
+ * Workspaces are one character cell each, an image per state (bitrot-tty/ws.css):
+ * ░ empty dim, ▒ occupied secondary, ▓ active on another monitor amber,
+ * █ focused amber, █ urgent error. Amber is focus or near (IDLE off, a waiting
+ * agent, tasks due today, a prayer under 15 minutes, battery low); red only for
+ * real failure (overdue, battery critical, temperature critical); full green is
+ * up / done. All images come from ~/.config/hypr/bitrot-tty/build-art.py. */
+
+@import url("bitrot-tty/ws.css");
+
+@define-color ground    #050806;
+@define-color panel     #0A110C;
+@define-color raised    #101A13;
+@define-color selection #16301C;
+@define-color hairline  #1E3D26;
+@define-color dim       #62A66E;
+@define-color secondary #6FBF7C;
+@define-color primary   #9CF0A6;
+@define-color structure #33CC55;
+@define-color attention #FFB000;
+@define-color ink       #050806;
+@define-color data      #CFE3CC;
+@define-color error     #FF6A55;
+@define-color errorfill #8C1A12;
+@define-color errorink  #E6F7E3;
+@define-color up        #7DFF8F;
+
+* {
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
+    min-height: 0;
+    font-family: "IBM Plex Mono", "IBM Plex Sans Arabic", "JetBrainsMono Nerd Font", "DejaVu Sans Mono", monospace;
+    font-size: 11px;
+}
+
+window#waybar {
+    background: @panel;
+    border-bottom: 1px solid @hairline;
+    color: @data;
+}
+
+tooltip {
+    background: @panel;
+    border: 1px solid @hairline;
+    border-radius: 0;
+}
+
+tooltip label {
+    padding: 3px 5px;
+    color: @primary;
+    font-family: "IBM Plex Mono", "IBM Plex Sans Arabic", "JetBrainsMono Nerd Font", monospace;
+    font-size: 12px;
+}
+
+/* ---- the end caps ---------------------------------------------------------- */
+
+.modules-left {
+    padding-left: 14px;
+    background-image: url("bitrot-tty/cap-left.png");
+    background-repeat: no-repeat;
+    background-position: left center;
+    background-size: 14px 26px;
+}
+
+.modules-right {
+    padding-right: 14px;
+    background-image: url("bitrot-tty/cap-right.png");
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: 14px 26px;
+}
+
+.modules-center {
+    padding: 0 18px;
+}
+
+window#waybar.empty #window {
+    padding: 0;
+}
+
+/* ---- workspaces: one cell per slot ------------------------------------------------ */
+/* hattin-workspaces prints a shade glyph per slot; here the glyph is hidden and
+ * bitrot-tty/ws.css gives every slot its cell image for the state. The foreign
+ * slot stays text: one ▂ per workspace that lives on another monitor, in the
+ * secondary colour when one of them is active there. */
+
+#workspaces {
+    margin: 0 8px 0 14px;
+}
+
+#custom-ws-1, #custom-ws-2, #custom-ws-3, #custom-ws-4, #custom-ws-5,
+#custom-ws-6, #custom-ws-7, #custom-ws-8, #custom-ws-9, #custom-ws-10 {
+    min-width: 8px;
+    padding: 0;
+    margin: 0 3px;
+    color: transparent;
+    font-size: 11px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 8px 16px;
+}
+
+#custom-ws-x {
+    min-width: 0;
+    padding: 0 0 0 6px;
+    color: @dim;
+}
+
+#custom-ws-x.active {
+    color: @secondary;
+}
+
+#custom-ws-1:hover, #custom-ws-2:hover, #custom-ws-3:hover, #custom-ws-4:hover,
+#custom-ws-5:hover, #custom-ws-6:hover, #custom-ws-7:hover, #custom-ws-8:hover,
+#custom-ws-9:hover, #custom-ws-10:hover {
+    box-shadow: inset 0 -1px 0 @structure;
+}
+
+/* ---- modules ------------------------------------------------------------------------- */
+
+#custom-mawaqit,
+#window {
+    padding: 0 8px;
+}
+
+#custom-mawaqit {
+    margin: 4px 0;
+}
+
+#window {
+    color: @dim;
+}
+
+/* next prayer: city and prayer in IBM Plex Sans 600 (markup from waybar-mawaqit), time in
+ * the data colour, countdown dim; classes: soon (<15m: amber time, amber frame), iqama,
+ * error, unset. */
+#custom-mawaqit.soon {
+    box-shadow: inset 0 0 0 1px @attention;
+}
+
+#custom-mawaqit.error,
+#custom-mawaqit.unset {
+    color: @dim;
+}
+
+#clock {
+    padding: 0;
+    color: @primary;
+}
+
+#custom-proton,
+#custom-tailscale,
+#network,
+#wireplumber,
+#bluetooth,
+#cpu,
+#memory,
+#temperature,
+#custom-nvidia,
+#power-profiles-daemon,
+#battery,
+#custom-tray-leader,
+#custom-notifications,
+#custom-idle,
+#custom-yawm {
+    margin: 5px 0;
+    padding: 0 9px;
+    border-left: 1px solid @hairline;
+    color: @data;
+}
+
+#power-profiles-daemon,
+#wireplumber.muted {
+    color: @dim;
+}
+
+/* up / done */
+#custom-proton.up,
+#custom-tailscale.up,
+#custom-nvidia.active,
+#battery.charging {
+    color: @up;
+}
+
+/* off is not a failure */
+#custom-proton.down,
+#custom-tailscale.down {
+    color: @dim;
+}
+
+/* focus or near: amber */
+#custom-yawm.due,
+#custom-idle.off,
+#battery.warning {
+    color: @attention;
+}
+
+/* real failure: red */
+#custom-yawm.overdue,
+#temperature.critical {
+    color: @error;
+}
+
+#battery.critical {
+    background: @errorfill;
+    color: @errorink;
+}
+
+/* ---- drawers (NET, SYS, the tray cells) ---------------------------------------------- */
+
+#custom-tray-leader {
+    color: @secondary;
+}
+
+#tray {
+    margin: 5px 0;
+    padding: 0 8px;
+}
+
+#network:hover,
+#cpu:hover,
+#custom-tray-leader:hover,
+#custom-mawaqit:hover,
+#custom-notifications:hover,
+#custom-idle:hover,
+#custom-yawm:hover,
+#wireplumber:hover {
+    background-color: @selection;
+}
+
+#tray menu {
+    background: @raised;
+    border: 1px solid @structure;
+    border-radius: 0;
+    color: @primary;
+}
+
+#tray menu menuitem {
+    border-radius: 0;
+}
+
+#tray menu menuitem:hover {
+    background: @selection;
+    color: @primary;
+}

@@ -1,0 +1,9 @@
+# Lines shown on the Bitrot lock screen, one per line, as written (the shade
+# characters are part of the rotted lines). Blank lines and lines starting with
+# # are skipped; the current line changes every 20 seconds.
+kernel panic - not syncing
+segmentation fault (core dumped)
+NO CARRIER
+all th▓ngs dec░y
+n▒thing is wr▓tten f░rever
+check▒um mism░tch

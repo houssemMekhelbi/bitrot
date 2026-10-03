@@ -1,0 +1,8 @@
+# org.gnome.desktop.interface keys applied by restore.sh (captured 2026-10-03)
+gtk-theme='Adwaita'
+icon-theme='BitrotLp'
+color-scheme='prefer-light'
+font-name='IBM Plex Sans 10.5'
+monospace-font-name='IBM Plex Mono 10.5'
+cursor-theme='BitrotLpCell'
+cursor-size=24

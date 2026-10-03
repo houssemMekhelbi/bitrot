@@ -1,0 +1,109 @@
+#!/usr/bin/env python3
+"""The clock of the Bitrot lock screen (Bitrot tty colours): HH:MM in Sora 700 with the slice.
+
+hyprlock cannot displace a band of a label, so its `image` widget shows a PNG that
+this script renders with cairo and Pango: the time in the primary colour, a band
+of it copied in structure green and shifted left, a band in amber shifted right
+(the two ghosts), and one band of the time displaced to the right on the ground
+colour. Both Bitrot variants install this file with their own colours.
+
+    bitrot-lock-clock               render for now if the minute changed, print the PNG's path
+                                    (hyprlock: reload_cmd; the path goes to stdout)
+    bitrot-lock-clock --at HH:MM F  a given time, to F (previews)
+    bitrot-lock-clock --static F    the slice without a time ("--:--"), to F (build-art.py:
+                                    what the lock shows until the first reload)
+The PNG is written to $XDG_RUNTIME_DIR under two alternating names (temp file +
+rename), so every minute hyprlock gets a new path.
+"""
+
+import os
+import sys
+import time
+from pathlib import Path
+
+W, H = 1000, 260                     # canvas; hyprlock's `size` is the smaller side (260)
+PX, TRACK = 210, 13                  # Sora 700 at 210px, tracked about 0.06em
+X0 = 13                              # left margin: room for the green ghost
+GROUND, PRI, STRUCT, ATT = "050806", "9CF0A6", "33CC55", "FFB000"
+# band top and bottom as a share of the digits' height, shift in px, colour; the last one is the
+# displaced band of the time itself, on the ground colour
+GHOSTS = ((0.20, 0.36, -9, STRUCT, 0.85), (0.60, 0.76, 9, ATT, 0.85))
+SHIFT = (0.46, 0.55, 14)
+
+
+def rgb(h):
+    return tuple(int(h[i:i + 2], 16) / 255 for i in (0, 2, 4))
+
+
+def render(text, out):
+    import cairo
+    import gi
+    gi.require_version("Pango", "1.0")
+    gi.require_version("PangoCairo", "1.0")
+    from gi.repository import Pango, PangoCairo
+
+    surf = cairo.ImageSurface(cairo.FORMAT_ARGB32, W, H)
+    cr = cairo.Context(surf)
+    layout = PangoCairo.create_layout(cr)
+    fd = Pango.FontDescription.from_string("Sora Bold")
+    fd.set_absolute_size(PX * Pango.SCALE)
+    layout.set_font_description(fd)
+    attrs = Pango.AttrList()
+    attrs.insert(Pango.attr_letter_spacing_new(TRACK * Pango.SCALE))
+    layout.set_attributes(attrs)
+    layout.set_text(text, -1)
+    ink, _logical = layout.get_pixel_extents()
+    y0 = (H - ink.height) / 2 - ink.y          # the digits' ink centred vertically
+    top, height = y0 + ink.y, ink.height
+
+    def show(dx, colour, alpha=1.0):
+        cr.move_to(X0 + dx, y0)
+        cr.set_source_rgba(*rgb(colour), alpha)
+        PangoCairo.show_layout(cr, layout)
+
+    def band(a, b):
+        cr.rectangle(0, round(top + height * a), W, round(height * (b - a)))
+        cr.clip()
+
+    show(0, PRI)
+    a, b, dx = SHIFT
+    cr.save(); band(a, b)
+    cr.rectangle(X0 + ink.x - 2, 0, ink.width + dx + 4, H)          # clear the band under the digits only
+    cr.clip()
+    cr.set_source_rgb(*rgb(GROUND)); cr.paint()
+    show(dx, PRI)
+    cr.restore()
+    for a, b, dx, colour, alpha in GHOSTS:
+        cr.save(); band(a, b)
+        show(dx, colour, alpha)
+        cr.restore()
+    out = Path(out)
+    tmp = out.with_name(out.name + ".tmp")
+    surf.write_to_png(str(tmp))
+    tmp.replace(out)
+
+
+def main():
+    a = sys.argv[1:]
+    if a[:1] == ["--static"]:
+        return render("--:--", a[1])
+    if a[:1] == ["--at"]:
+        return render(a[1], a[2])
+    run = Path(os.environ.get("XDG_RUNTIME_DIR", "/tmp"))
+    now = time.strftime("%H:%M")
+    minute = time.localtime().tm_min
+    out = run / f"bitrot-lock-clock-{'ab'[minute % 2]}.png"
+    stamp = run / "bitrot-lock-clock.minute"
+    key = f"tty {time.strftime('%j')} {now}"
+    try:
+        fresh = out.exists() and stamp.read_text() == key
+    except OSError:
+        fresh = False
+    if not fresh:
+        render(now, out)
+        stamp.write_text(key)
+    print(out)
+
+
+if __name__ == "__main__":
+    main()

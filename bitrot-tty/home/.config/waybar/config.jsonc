@@ -1,0 +1,312 @@
+// Bitrot tty bar, identical on every monitor (no "output" key).
+//   left   workspace slots of *this* monitor (custom/ws-*, fed by
+//          ~/.local/bin/hattin-workspaces; clicks go through hattin_ws in
+//          hypr/workspaces.lua because Hyprland's Lua config rejects the
+//          legacy dispatch the hyprland/workspaces module sends), then the
+//          next prayer (custom/mawaqit, ~/.local/bin/waybar-mawaqit over the
+//          mawaqit-api podman quadlet; mosques in ~/.config/mawaqit/mosques,
+//          scroll or right-click to switch)
+//          and the focused window title
+//   centre date and time between two half-block marks
+//   right  NET, SYS and the tray mark expand on click (▾); yawm is Taskwarrior
+//          due today (click list, right-click quick add, ~/.local/bin/bitrot-yawm;
+//          refreshed on SIGRTMIN+10)
+// Labels are IBM Plex Mono in the primary colour, values take the module's data
+// colour; the end caps, the workspace cells and every colour live in style.css.
+
+{
+  "name": "hattin-bar",
+  "layer": "top",
+  "position": "top",
+  "height": 26,
+  "margin-top": 0,
+  "margin-left": 0,
+  "margin-right": 0,
+  "spacing": 0,
+  "modules-left": [
+    "group/workspaces",
+    "custom/mawaqit",
+    "hyprland/window"
+  ],
+  "modules-center": [
+    "clock"
+  ],
+  "modules-right": [
+    "group/net",
+    "group/sys",
+    "wireplumber",
+    "battery",
+    "group/extras",
+    "custom/notifications",
+    "custom/idle",
+    "custom/yawm"
+  ],
+  "group/workspaces": {
+    "orientation": "horizontal",
+    "modules": [
+      "custom/ws-1",
+      "custom/ws-2",
+      "custom/ws-3",
+      "custom/ws-4",
+      "custom/ws-5",
+      "custom/ws-6",
+      "custom/ws-7",
+      "custom/ws-8",
+      "custom/ws-9",
+      "custom/ws-10",
+      "custom/ws-x"
+    ]
+  },
+  "custom/ws-1": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/1\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(1)'"
+  },
+  "custom/ws-2": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/2\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(2)'"
+  },
+  "custom/ws-3": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/3\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(3)'"
+  },
+  "custom/ws-4": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/4\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(4)'"
+  },
+  "custom/ws-5": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/5\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(5)'"
+  },
+  "custom/ws-6": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/6\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(6)'"
+  },
+  "custom/ws-7": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/7\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(7)'"
+  },
+  "custom/ws-8": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/8\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(8)'"
+  },
+  "custom/ws-9": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/9\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(9)'"
+  },
+  "custom/ws-10": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/10\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.click(10)'"
+  },
+  "custom/ws-x": {
+    "exec": "cat \"$XDG_RUNTIME_DIR/hattin-ws/$WAYBAR_OUTPUT_NAME/x\" 2>/dev/null",
+    "return-type": "json",
+    "signal": 8,
+    "format": "{}",
+    "on-click": "hyprctl eval 'hattin_ws.cycle_foreign()'"
+  },
+  "custom/mawaqit": {
+    "exec": "~/.local/bin/waybar-mawaqit",
+    "return-type": "json",
+    "interval": 20,
+    "signal": 9,
+    "format": "{}",
+    "on-click": "~/.local/bin/waybar-mawaqit open",
+    "on-click-right": "~/.local/bin/waybar-mawaqit next",
+    "on-scroll-up": "~/.local/bin/waybar-mawaqit prev",
+    "on-scroll-down": "~/.local/bin/waybar-mawaqit next",
+    "smooth-scrolling-threshold": 1.5
+  },
+  "hyprland/window": {
+    "format": "{title}",
+    "separate-outputs": true,
+    "max-length": 40
+  },
+  "group/net": {
+    "orientation": "inherit",
+    "drawer": {
+      "click-to-reveal": true,
+      "transition-duration": 250,
+      "transition-left-to-right": false,
+      "children-class": "drawer-hidden"
+    },
+    "modules": [
+      "network",
+      "custom/proton",
+      "custom/tailscale",
+      "bluetooth"
+    ]
+  },
+  "group/sys": {
+    "orientation": "inherit",
+    "drawer": {
+      "click-to-reveal": true,
+      "transition-duration": 250,
+      "transition-left-to-right": false,
+      "children-class": "drawer-hidden"
+    },
+    "modules": [
+      "cpu",
+      "memory",
+      "temperature",
+      "custom/nvidia",
+      "power-profiles-daemon"
+    ]
+  },
+  "group/extras": {
+    "orientation": "inherit",
+    "drawer": {
+      "click-to-reveal": true,
+      "transition-duration": 250,
+      "transition-left-to-right": false,
+      "children-class": "drawer-hidden"
+    },
+    "modules": [
+      "custom/tray-leader",
+      "tray"
+    ]
+  },
+  "network": {
+    "format-ethernet": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>NET</span> eth <span color='#62A66E'>▾</span>",
+    "format-wifi": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>NET</span> {signalStrength}% <span color='#62A66E'>▾</span>",
+    "format-disconnected": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>NET</span> off <span color='#62A66E'>▾</span>",
+    "tooltip-format": "{ifname}  {ipaddr}\n{essid}"
+  },
+  "custom/proton": {
+    "exec": "~/.local/bin/waybar-proton",
+    "return-type": "json",
+    "interval": 10
+  },
+  "custom/tailscale": {
+    "exec": "~/.local/bin/waybar-tailscale",
+    "return-type": "json",
+    "interval": 15
+  },
+  "bluetooth": {
+    "format": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>BT</span> on",
+    "format-disabled": "",
+    "format-off": ""
+  },
+  "cpu": {
+    "format": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>SYS</span> {usage:>2}% <span color='#33CC55'>{icon}</span> <span color='#62A66E'>▾</span>",
+    "format-icons": [
+      "▁",
+      "▂",
+      "▃",
+      "▄",
+      "▅",
+      "▆",
+      "▇",
+      "█"
+    ],
+    "tooltip": false
+  },
+  "memory": {
+    "format": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>MEM</span> {used:0.1f}G <span color='#33CC55'>{icon}</span>",
+    "format-icons": [
+      "▁",
+      "▂",
+      "▃",
+      "▄",
+      "▅",
+      "▆",
+      "▇",
+      "█"
+    ]
+  },
+  "temperature": {
+    "critical-threshold": 90,
+    "format": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>TMP</span> {temperatureC}°"
+  },
+  "custom/nvidia": {
+    "exec": "~/.local/bin/waybar-nvidia",
+    "return-type": "json",
+    "interval": 30
+  },
+  "power-profiles-daemon": {
+    "format": "{profile}",
+    "tooltip": true
+  },
+  "wireplumber": {
+    "format": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>VOL</span> {volume}%",
+    "format-muted": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>VOL</span> mute",
+    "on-click": "pavucontrol"
+  },
+  "battery": {
+    "format": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>BAT</span> {capacity}%",
+    "format-charging": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>BAT</span> +{capacity}%",
+    "states": {
+      "warning": 20,
+      "critical": 10
+    }
+  },
+  "custom/tray-leader": {
+    "format": "▪▪ <span color='#62A66E'>▾</span>",
+    "tooltip-format": "Tray"
+  },
+  "tray": {
+    "icon-size": 15,
+    "spacing": 7
+  },
+  "custom/notifications": {
+    "format": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>NOTIF</span>",
+    "on-click": "swaync-client -t",
+    "on-click-right": "swaync-client -d"
+  },
+  "custom/idle": {
+    "exec": "~/.local/bin/hattin-idle",
+    "return-type": "json",
+    "interval": 30,
+    "signal": 11,
+    "format": "<span color='#9CF0A6' font_family='IBM Plex Mono' weight='500' size='medium' letter_spacing='0'>IDLE</span> {}",
+    "on-click": "~/.local/bin/hattin-idle toggle"
+  },
+  "custom/yawm": {
+    "exec": "~/.local/bin/waybar-yawm",
+    "return-type": "json",
+    "interval": 300,
+    "signal": 10,
+    "on-click": "~/.local/bin/bitrot-yawm",
+    "on-click-right": "~/.local/bin/bitrot-yawm add"
+  },
+  "clock": {
+    "locale": "en_GB.UTF-8",
+    "format": "<span color='#62A66E'>▌</span> <span color='#6FBF7C'>{0:%a %d %b}</span>  {0:%H:%M} <span color='#62A66E'>▐</span>",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "format": {
+        "today": "<span background='#FFB000' color='#050806'><b>{}</b></span>",
+        "weekdays": "<span color='#62A66E'>{}</span>"
+      }
+    }
+  }
+}

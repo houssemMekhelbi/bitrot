@@ -1,0 +1,4 @@
+name = BitrotLpCell
+description = Bitrot lp: character-cell block cursors, an amber ramp when busy
+version = 0.1
+cursors_directory = hyprcursors

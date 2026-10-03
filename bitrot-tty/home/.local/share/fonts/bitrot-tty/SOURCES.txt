@@ -1,0 +1,5 @@
+Sora[wght].ttf  https://github.com/google/fonts/tree/main/ofl/sora  (OFL-sora.txt)
+IBMPlexSans[wdth,wght].ttf  https://github.com/google/fonts/tree/main/ofl/ibmplexsans  (OFL-ibmplexsans.txt)
+IBMPlexMono-Regular/Medium/SemiBold.ttf  https://github.com/google/fonts/tree/main/ofl/ibmplexmono  (OFL-ibmplexmono.txt)
+Amiri-Regular.ttf, IBMPlexSansArabic-Regular/Medium.ttf  the copies every theme vendors (google/fonts ofl/amiri, ofl/ibmplexsansarabic) (OFL-amiri.txt, OFL-IBMPlexSansArabic.txt)
+Fetched 2026-10-03.

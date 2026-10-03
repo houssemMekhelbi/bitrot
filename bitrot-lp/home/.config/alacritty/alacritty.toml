@@ -1,0 +1,78 @@
+# Bitrot lp terminal: IBM Plex Mono, opaque, amber block cursor.
+
+[window]
+opacity = 1.0
+padding = { x = 6, y = 6 }
+decorations = "None"
+
+[font]
+normal = { family = "IBM Plex Mono", style = "Regular" }
+size = 10.5
+offset = { x = 0, y = 3 }
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+vi_mode_style = { shape = "Block" }
+thickness = 0.2
+
+[colors.primary]
+background = "#F4F1E6"
+foreground = "#1A1F1A"
+bright_foreground = "#1A1F1A"
+
+[colors.cursor]
+text = "#F4F1E6"
+cursor = "#8A5200"
+
+[colors.selection]
+text = "#1A1F1A"
+background = "#CFE3C6"
+
+# Search, hints, the footer bar and the vi-mode cursor in the theme's colours (alacritty's stock ones otherwise).
+[colors.search.matches]
+foreground = "#1A1F1A"
+background = "#CFE3C6"
+
+[colors.search.focused_match]
+foreground = "#F4F1E6"
+background = "#8A5200"
+
+[colors.hints.start]
+foreground = "#F4F1E6"
+background = "#8A5200"
+
+[colors.hints.end]
+foreground = "#8A5200"
+background = "#CFE3C6"
+
+[colors.footer_bar]
+foreground = "#1A1F1A"
+background = "#CFE3C6"
+
+[colors.line_indicator]
+foreground = "#F4F1E6"
+background = "#2A6334"
+
+[colors.vi_mode_cursor]
+text = "#F4F1E6"
+cursor = "#2A6334"
+
+[colors.normal]
+black   = "#1A1F1A"
+red     = "#A3180F"
+green   = "#2A6334"
+yellow  = "#8A5200"
+blue    = "#205F7A"
+magenta = "#6D2F69"
+cyan    = "#146A5C"
+white   = "#44614A"
+
+[colors.bright]
+black   = "#4D6B4F"
+red     = "#B8281B"
+green   = "#27773A"
+yellow  = "#8F5A0A"
+blue    = "#225F7A"
+magenta = "#8A4A85"
+cyan    = "#1A7566"
+white   = "#0B0E0B"

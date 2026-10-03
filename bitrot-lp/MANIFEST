@@ -1,0 +1,73 @@
+# Bitrot lp theme + add-ons, built 2026-10-03.
+
+# Hyprland (core Lua config is included because bitrot-lp.lua/workspaces.lua are
+# required from it and it launches the bitrot-*/hattin-* helpers)
+.config/hypr/hyprland.lua
+.config/hypr/futuwwa.lua
+.config/hypr/bitrot-lp.lua
+.config/hypr/workspaces.lua
+.config/hypr/hyprlock.conf
+.config/hypr/hypridle.conf
+.config/hypr/hyprpaper.conf
+.config/hypr/bitrot-lp
+
+# Waybar
+.config/waybar/config.jsonc
+.config/waybar/style.css
+.config/waybar/bitrot-lp
+
+# GTK / Thunar, fonts, icons
+.config/gtk-3.0/gtk.css
+.config/gtk-3.0/settings.ini
+.config/gtk-3.0/bitrot-lp
+.config/gtk-4.0/gtk.css
+.config/gtk-4.0/settings.ini
+.config/fontconfig/fonts.conf
+.local/share/fonts/bitrot-lp
+.local/share/icons/BitrotLp
+.local/share/icons/BitrotLpCell
+
+# Terminals, shell, multiplexer, (unused) fuzzel, notifications
+.config/foot/foot.ini
+.config/alacritty/alacritty.toml
+.config/ghostty/config.ghostty
+.config/tmux/tmux.conf
+.config/zsh/bitrot-lp.zsh-theme
+.config/fuzzel/fuzzel.ini
+.config/swaync/style.css
+
+# Helpers: launcher, lock, workspaces, bar scripts
+.local/bin/bitrot-launcher
+.local/bin/bitrot-launcher-menu
+.local/bin/bitrot-lock-saying
+.local/bin/bitrot-lock-clock
+.local/bin/hattin-workspaces
+.local/bin/hattin-bluetooth-ui
+.local/bin/hattin-cliphist-store
+.local/bin/hattin-idle
+.local/bin/hattin-keys
+.local/bin/hattin-lock
+.local/bin/hattin-monitor-recover
+.local/bin/lock-unless-ssh-active
+.local/bin/waybar-nvidia
+.local/bin/waybar-proton
+.local/bin/waybar-tailscale
+
+# Add-on: yawm (Taskwarrior tasks; task *data* is not included)
+.config/task/taskrc
+.local/bin/waybar-yawm
+.local/bin/bitrot-yawm
+.local/bin/bitrot-yawm-menu
+
+# Add-on: mawaqit prayer times
+.config/mawaqit/mosques
+.config/containers/systemd/mawaqit-api.container
+.local/share/mawaqit-api
+.local/share/mawaqit/sounds
+.local/bin/waybar-mawaqit
+.local/bin/mawaqit-alert
+
+# User services
+.config/systemd/user/hattin-workspaces.service
+.config/systemd/user/mawaqit-alerts.service
+.config/systemd/user/cliphist.service.d/override.conf

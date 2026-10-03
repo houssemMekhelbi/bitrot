@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Taskwarrior popups for the waybar "yawm" module, same opaque frame as the
+# launcher (window rules bitrot-yawm / bitrot-yawm-add in hypr/bitrot-tty.lua).
+#   bitrot-yawm        task list  (click)
+#   bitrot-yawm add    quick add  (right-click)
+# Running it again while that popup is open closes it.
+set -euo pipefail
+
+mode=${1:-list}
+if [[ $mode == add ]]; then
+    class=bitrot-yawm-add title="Add task"
+else
+    class=bitrot-yawm title="Yawm"
+fi
+
+if hyprctl clients -j | grep -q "\"class\": \"$class\""; then
+    hyprctl eval 'bitrot_close_popups()' >/dev/null
+    exit 0
+fi
+
+exec foot \
+    --app-id="$class" \
+    --title="$title" \
+    -o main.pad=18x14 \
+    -o main.font="IBM Plex Mono:size=10.5" \
+    -o main.line-height=21 \
+    -o colors-dark.alpha=1.0 \
+    -o colors-light.alpha=1.0 \
+    -o colors-dark.background=0A110C \
+    -o colors-light.background=0A110C \
+    "$HOME/.local/bin/bitrot-yawm-menu" "$mode"
